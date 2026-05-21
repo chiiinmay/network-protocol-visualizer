@@ -42,15 +42,19 @@ for f in features:
     p.text = f
     p.level = 0
 
-# Slide 4: Architecture Diagram (placeholder image)
+# Slide 4: Architecture Diagram (Real Image)
 slide = prs.slides.add_slide(prs.slide_layouts[5])  # Title Only layout
 slide.shapes.title.text = "Architecture Overview"
-# Insert placeholder rectangle
-left = top = Inches(1)
-width = height = Inches(5)
-shape = slide.shapes.add_shape(
-    MSO_SHAPE.RECTANGLE, left=left, top=top, width=width, height=height)
-shape.text = "[Architecture diagram placeholder]"
+left = Inches(1.5)
+top = Inches(1.5)
+width = Inches(7)
+height = Inches(4.5)
+try:
+    slide.shapes.add_picture('architecture.png', left, top, width, height)
+except Exception as e:
+    # Fallback to rectangle if image not found
+    shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
+    shape.text = f"[Architecture Diagram]\nImage not found: {e}"
 
 # Slide 5: Error Detection Techniques
 slide = prs.slides.add_slide(bullet_slide_layout)
