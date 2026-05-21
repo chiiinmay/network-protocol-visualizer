@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  .layer-card {
+    @apply rounded-lg shadow-md p-4 transition-all duration-300;
+  }
+  
+  .header-segment {
+    @apply border-2 border-dashed rounded p-2 m-1;
+  }
+}
