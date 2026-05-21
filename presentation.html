@@ -5,401 +5,489 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Network Protocol Visualizer – Presentation</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/reveal.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/theme/night.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/theme/black.css"/>
   <style>
     :root {
-      --indigo: #6366f1;
-      --teal: #14b8a6;
-      --coral: #f97316;
-      --yellow: #eab308;
-      --green: #22c55e;
-      --red: #ef4444;
+      --indigo: #818cf8;
+      --indigo-glow: rgba(129, 140, 248, 0.15);
+      --teal: #2dd4bf;
+      --teal-glow: rgba(45, 212, 191, 0.15);
+      --dark-card: rgba(30, 41, 59, 0.7);
+      --border-glow: rgba(255, 255, 255, 0.08);
     }
 
-    .reveal .slides section { text-align: left; }
-    .reveal h1, .reveal h2, .reveal h3 { text-align: center; font-family: 'Segoe UI', sans-serif; }
+    /* Custom Reveal.js styles to prevent any text collapse */
+    .reveal {
+      font-family: 'Inter', -apple-system, sans-serif !important;
+      background: radial-gradient(circle at center, #0f172a, #020617) !important;
+    }
+    
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+      font-weight: 800 !important;
+      text-transform: none !important;
+      letter-spacing: -0.02em !important;
+      color: #f8fafc !important;
+      margin-bottom: 20px !important;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+    }
 
-    .title-slide { text-align: center !important; }
-    .title-slide h1 { font-size: 2.4em; background: linear-gradient(90deg, #6366f1, #14b8a6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .title-slide p { color: #94a3b8; }
+    .reveal h1 {
+      font-size: 2.2em !important;
+      background: linear-gradient(135deg, var(--indigo), var(--teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
+    .reveal h2 {
+      font-size: 1.6em !important;
+      border-bottom: 2px solid var(--border-glow);
+      padding-bottom: 12px;
+      margin-bottom: 30px !important;
+    }
+
+    .reveal p, .reveal li {
+      color: #94a3b8 !important;
+      line-height: 1.5 !important;
+      font-size: 0.8em !important;
+    }
+
+    /* Modern Glassmorphic Container Cards */
+    .card {
+      background: var(--dark-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7),
+                  inset 0 1px 0 rgba(255,255,255,0.05);
+      transition: all 0.3s ease;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .card:hover {
+      border-color: rgba(129, 140, 248, 0.3);
+      box-shadow: 0 15px 40px -10px rgba(129, 140, 248, 0.15);
+    }
+    .card h3 {
+      font-size: 1.1em !important;
+      color: var(--indigo) !important;
+      margin-bottom: 12px !important;
+      text-align: left !important;
+    }
+    .card p, .card li {
+      font-size: 0.7em !important;
+      margin: 0;
+      text-align: left;
+    }
+
+    /* Grids & Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-top: 10px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-top: 10px;
+    }
+
+    /* Badge & Tag Pills */
     .badge {
       display: inline-block;
-      padding: 4px 14px;
+      padding: 6px 16px;
       border-radius: 999px;
       font-size: 0.55em;
-      font-weight: bold;
-      margin: 4px;
+      font-weight: 700;
+      margin: 6px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-    .badge-blue   { background: #1e40af; color: #bfdbfe; }
-    .badge-green  { background: #14532d; color: #86efac; }
-    .badge-orange { background: #7c2d12; color: #fed7aa; }
-    .badge-teal   { background: #134e4a; color: #99f6e4; }
+    .badge-indigo { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+    .badge-teal   { background: rgba(20, 184, 166, 0.2); color: #99f6e4; border: 1px solid rgba(20, 184, 166, 0.3); }
+    .badge-coral  { background: rgba(249, 115, 22, 0.2); color: #ffedd5; border: 1px solid rgba(249, 115, 22, 0.3); }
 
-    .card {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      padding: 18px 22px;
-      margin: 10px 0;
-    }
-    .card h3 { margin: 0 0 8px; font-size: 1em; color: var(--indigo); }
-    .card p, .card li { font-size: 0.62em; color: #cbd5e1; line-height: 1.6; }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-
+    /* OSI Layer pills - spacious & colorful */
     .layer-pill {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      margin: 5px 0;
-      font-size: 0.6em;
+      gap: 16px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      margin: 8px 0;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.2s ease;
+    }
+    .layer-pill:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateX(6px);
     }
     .layer-num {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 1.2em;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1em;
+      color: #fff;
+    }
+    .layer-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .layer-title {
+      font-size: 0.7em !important;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    .layer-desc {
+      font-size: 0.55em !important;
+      color: #64748b;
     }
 
-    .algo-card {
-      background: rgba(255,255,255,0.06);
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 0.58em;
-      border-left: 3px solid;
-    }
-    .algo-card .title { font-weight: bold; font-size: 1.1em; margin-bottom: 6px; }
-
+    /* URL visual containers */
     .url-box {
-      background: rgba(99,102,241,0.15);
-      border: 1px solid #6366f1;
-      border-radius: 8px;
-      padding: 12px 20px;
-      font-size: 0.65em;
-      color: #a5b4fc;
-      margin: 8px 0;
-      text-align: center;
-    }
-    .url-box a { color: #818cf8; text-decoration: none; }
-
-    .tech-row {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 14px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 8px;
-      margin: 6px 0;
-      font-size: 0.62em;
-    }
-    .tech-icon { font-size: 1.6em; }
-    .tech-name { font-weight: bold; color: #e2e8f0; }
-    .tech-desc { color: #94a3b8; }
-
-    .big-emoji { font-size: 2em; display: block; text-align: center; margin-bottom: 10px; }
-    .section-label {
-      font-size: 0.5em; text-transform: uppercase; letter-spacing: 2px;
-      color: var(--teal); margin-bottom: 6px; text-align: center;
-    }
-    .flow-arrow { text-align: center; font-size: 1.4em; margin: 4px 0; color: var(--indigo); }
-
-    .highlight-box {
-      background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(20,184,166,0.15));
-      border: 1px solid rgba(99,102,241,0.4);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(45, 212, 191, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3);
       border-radius: 12px;
       padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
       text-align: center;
-      font-size: 0.65em;
-      color: #c7d2fe;
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.1);
     }
-    .highlight-box .number { font-size: 3em; font-weight: bold; color: var(--indigo); }
+    .url-box strong { color: #f8fafc; font-size: 0.85em; }
+    .url-box a { color: var(--teal) !important; text-decoration: none; font-weight: 700; font-size: 0.9em; }
+
+    /* Flow & process connections */
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.5em !important;
+      color: #94a3b8;
+    }
+    .flow-arrow {
+      color: var(--indigo);
+      font-size: 1.2em;
+      margin: 2px 0;
+      text-shadow: 0 0 8px var(--indigo);
+    }
+
+    /* General cleanups */
+    .section-label {
+      font-size: 0.5em;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--teal);
+      margin-bottom: 10px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    /* Tech Stack row styling */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-top: 30px;
+    }
+    .tech-card {
+      background: var(--dark-card);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .tech-logo { font-size: 2em; margin-bottom: 8px; }
+    .tech-title { font-size: 0.6em !important; font-weight: 700; color: #fff; }
   </style>
 </head>
 <body>
 <div class="reveal">
   <div class="slides">
 
-    <!-- SLIDE 1: Title -->
-    <section class="title-slide">
-      <br><br>
-      <div style="font-size:3em">🌐</div>
+    <!-- Slide 1: Welcome -->
+    <section style="text-align: center;">
+      <div style="font-size: 3.5em; margin-bottom: 10px;">🌐</div>
       <h1>Network Protocol<br>Visualizer & Simulator</h1>
-      <p>An interactive learning tool for Computer Networks</p>
+      <p style="font-size: 0.95em; color: #94a3b8; margin-top: 10px;">
+        An Interactive OSI Model Simulation & Error Detection Playground
+      </p>
       <br>
-      <div>
-        <span class="badge badge-blue">React 18</span>
+      <div style="margin-bottom: 20px;">
+        <span class="badge badge-indigo">React 18</span>
         <span class="badge badge-teal">Vite</span>
-        <span class="badge badge-green">Tailwind CSS</span>
-        <span class="badge badge-orange">Framer Motion</span>
+        <span class="badge badge-coral">Tailwind CSS</span>
       </div>
-      <br>
       <div class="url-box">
-        🚀 Live at: <a href="https://network-protocol-visualizer.vercel.app">network-protocol-visualizer.vercel.app</a>
+        <strong>🌐 Live Deployment</strong><br>
+        <a href="https://network-protocol-visualizer.vercel.app" target="_blank">network-protocol-visualizer.vercel.app</a>
       </div>
     </section>
 
-    <!-- SLIDE 2: Problem Statement -->
+    <!-- Slide 2: The Core Challenge -->
     <section>
-      <div class="section-label">The Problem</div>
-      <h2>Why This Tool?</h2>
+      <div class="section-label">Challenge</div>
+      <h2>Abstract Networking Concepts</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>❌ The Traditional Approach</h3>
+          <p style="font-size: 0.65em !important; line-height: 1.6;">
+            Computer networking concepts like <strong>OSI Encapsulation</strong> and <strong>Cyclic Codes</strong> are often taught purely through static textbook pages, formulas, and dry theories, leaving students disconnected from execution logic.
+          </p>
+        </div>
+        <div class="card">
+          <h3>✅ The Visual Solution</h3>
+          <p style="font-size: 0.65em !important; line-height: 1.6;">
+            A responsive, highly visual web app built to turn packet routing, custom protocol headers, bit‑flipping corruption, and error check calculations into an intuitive, interactive experience.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Application Modules -->
+    <section>
+      <div class="section-label">Modules</div>
+      <h2>Two Learning Ecosystems</h2>
       <br>
       <div class="grid-2">
         <div class="card">
-          <h3>❓ The Challenge</h3>
-          <p>Networking concepts like OSI layers, encapsulation, and error detection are difficult to visualize from textbooks alone. Students struggle to connect theory with real-world behavior.</p>
+          <h3>📡 OSI Layer Stack Simulator</h3>
+          <p style="font-size: 0.62em !important; line-height: 1.6; margin-bottom: 8px;">
+            Enables users to send custom network messages and observe detailed packet flows.
+          </p>
+          <ul style="font-size: 0.58em; color: #94a3b8; padding-left: 20px;">
+            <li>Color-coded animated 7-layer visualizer</li>
+            <li>Step-through send and receive mechanisms</li>
+            <li>Mock header fields generation (TCP/UDP, MAC, etc.)</li>
+            <li>Playback controls (Play, Pause, Step)</li>
+          </ul>
         </div>
         <div class="card">
-          <h3>💡 Our Solution</h3>
-          <p>An interactive browser-based tool that lets students <strong>see</strong> data flowing through layers, <strong>watch</strong> headers being added and removed, and <strong>experiment</strong> with error detection algorithms.</p>
-        </div>
-      </div>
-      <br>
-      <div class="highlight-box">
-        <span class="number">2</span><br>
-        Fully interactive modules — <strong>OSI Simulator</strong> & <strong>Error Detection Playground</strong>
-      </div>
-    </section>
-
-    <!-- SLIDE 3: Features Overview -->
-    <section>
-      <div class="section-label">Features</div>
-      <h2>What Can You Do?</h2>
-      <br>
-      <div class="grid-2">
-        <div>
-          <p style="font-size:0.65em; color: var(--teal); font-weight:bold;">📡 OSI MODEL SIMULATOR</p>
-          <div class="card"><p>✅ Visualize all 7 OSI layers interactively</p></div>
-          <div class="card"><p>✅ Type a message and watch it encapsulate layer by layer</p></div>
-          <div class="card"><p>✅ See actual protocol headers (HTTP, TCP, IP, MAC)</p></div>
-          <div class="card"><p>✅ Play / Pause / Step Forward / Step Back controls</p></div>
-          <div class="card"><p>✅ Choose Protocol: HTTP, HTTPS, FTP, SMTP + TCP/UDP</p></div>
-        </div>
-        <div>
-          <p style="font-size:0.65em; color: var(--coral); font-weight:bold;">🔬 ERROR DETECTION PLAYGROUND</p>
-          <div class="card"><p>✅ Enter binary data and compute check bits</p></div>
-          <div class="card"><p>✅ Flip individual bits to simulate data corruption</p></div>
-          <div class="card"><p>✅ 1D Parity — simple bit count</p></div>
-          <div class="card"><p>✅ 2D Parity — row & column block coding</p></div>
-          <div class="card"><p>✅ Checksum — IP/TCP style arithmetic</p></div>
-          <div class="card"><p>✅ CRC-8 — polynomial division</p></div>
+          <h3>🔬 Error Detection Playground</h3>
+          <p style="font-size: 0.62em !important; line-height: 1.6; margin-bottom: 8px;">
+            Helps students understand exactly how devices detect data corruption.
+          </p>
+          <ul style="font-size: 0.58em; color: #94a3b8; padding-left: 20px;">
+            <li>Enter custom binary string data</li>
+            <li>Interactive bit-flip injector to trigger errors</li>
+            <li>Real-time calculations for Parity, Checksum, and CRC</li>
+            <li>Instant visual pass/fail validation metrics</li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 4: OSI Layers -->
+    <!-- Slide 4: OSI Model Breakdown -->
     <section>
-      <div class="section-label">OSI Model</div>
-      <h2>The 7 Layers Visualized</h2>
-      <br>
-      <div class="layer-pill" style="background:rgba(255,107,107,0.15)">
-        <div class="layer-num" style="background:#FF6B6B">7</div>
-        <div><strong>Application Layer</strong> &nbsp;·&nbsp; <span style="color:#94a3b8">HTTP, HTTPS, FTP, SMTP, DNS &nbsp;·&nbsp; PDU: Data</span></div>
-      </div>
-      <div class="layer-pill" style="background:rgba(78,205,196,0.15)">
-        <div class="layer-num" style="background:#4ECDC4">6</div>
-        <div><strong>Presentation Layer</strong> &nbsp;·&nbsp; <span style="color:#94a3b8">SSL/TLS, JPEG, ASCII &nbsp;·&nbsp; PDU: Data</span></div>
-      </div>
-      <div class="layer-pill" style="background:rgba(69,183,209,0.15)">
-        <div class="layer-num" style="background:#45B7D1">5</div>
-        <div><strong>Session Layer</strong> &nbsp;·&nbsp; <span style="color:#94a3b8">NetBIOS, RPC, PPTP &nbsp;·&nbsp; PDU: Data</span></div>
-      </div>
-      <div class="layer-pill" style="background:rgba(255,160,122,0.15)">
-        <div class="layer-num" style="background:#FFA07A">4</div>
-        <div><strong>Transport Layer</strong> &nbsp;·&nbsp; <span style="color:#94a3b8">TCP, UDP &nbsp;·&nbsp; PDU: Segment / Datagram</span></div>
-      </div>
-      <div class="layer-pill" style="background:rgba(152,216,200,0.15)">
-        <div class="layer-num" style="background:#98D8C8">3</div>
-        <div><strong>Network Layer</strong> &nbsp;·&nbsp; <span style="color:#94a3b8">IP, ICMP, ARP &nbsp;·&nbsp; PDU: Packet</span></div>
-      </div>
-      <div class="layer-pill" style="background:rgba(247,220,111,0.15)">
-        <div class="layer-num" style="background:#F7DC6F; color:#1a1a1a">2</div>
-        <div><strong>Data Link Layer</strong> &nbsp;·&nbsp; <span style="color:#94a3b8">Ethernet, PPP &nbsp;·&nbsp; PDU: Frame</span></div>
-      </div>
-      <div class="layer-pill" style="background:rgba(187,143,206,0.15)">
-        <div class="layer-num" style="background:#BB8FCE">1</div>
-        <div><strong>Physical Layer</strong> &nbsp;·&nbsp; <span style="color:#94a3b8">USB, Bluetooth, DSL &nbsp;·&nbsp; PDU: Bits</span></div>
-      </div>
-    </section>
-
-    <!-- SLIDE 5: Encapsulation Flow -->
-    <section>
-      <div class="section-label">Core Feature</div>
-      <h2>Encapsulation & Decapsulation</h2>
-      <br>
-      <div class="grid-2">
-        <div>
-          <p style="font-size:0.65em; color:var(--teal); font-weight:bold; text-align:center">📥 SENDER (Encapsulation)</p>
-          <div style="font-size:0.6em; text-align:center">
-            <div class="card" style="background:rgba(255,107,107,0.15)">Original Message</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(255,107,107,0.15)">+ HTTP Header (App Layer)</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(78,205,196,0.15)">+ Encoding Info (Presentation)</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(255,160,122,0.15)">+ TCP/UDP Header (Transport)</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(152,216,200,0.15)">+ IP Header (Network)</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(247,220,111,0.15); color:#1a1a1a">+ Ethernet Frame (Data Link)</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(187,143,206,0.15)">📡 Raw Bits (Physical)</div>
+      <div class="section-label">OSI Stack</div>
+      <h2>Layer-by-Layer Architecture</h2>
+      <div style="transform: scale(0.9); margin-top: -10px;">
+        <div class="layer-pill" style="border-left: 5px solid #ff6b6b;">
+          <div class="layer-num" style="background: #ff6b6b;">7</div>
+          <div class="layer-info">
+            <span class="layer-title">Application Layer (HTTP, HTTPS, FTP)</span>
+            <span class="layer-desc">Generates the user's initial message data payload.</span>
           </div>
         </div>
-        <div>
-          <p style="font-size:0.65em; color:var(--coral); font-weight:bold; text-align:center">📤 RECEIVER (Decapsulation)</p>
-          <div style="font-size:0.6em; text-align:center">
-            <div class="card" style="background:rgba(187,143,206,0.15)">📡 Raw Bits received</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(247,220,111,0.15); color:#1a1a1a">Strip Ethernet Frame</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(152,216,200,0.15)">Strip IP Header</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(255,160,122,0.15)">Strip TCP Header</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(78,205,196,0.15)">Decode Presentation</div>
-            <div class="flow-arrow">↓</div>
-            <div class="card" style="background:rgba(255,107,107,0.15)">✅ Original Message</div>
+        <div class="layer-pill" style="border-left: 5px solid #4ecdc4;">
+          <div class="layer-num" style="background: #4ecdc4;">6-5</div>
+          <div class="layer-info">
+            <span class="layer-title">Presentation & Session Layers</span>
+            <span class="layer-desc">Formats data representation and manages logical connection streams.</span>
+          </div>
+        </div>
+        <div class="layer-pill" style="border-left: 5px solid #ffa07a;">
+          <div class="layer-num" style="background: #ffa07a;">4</div>
+          <div class="layer-info">
+            <span class="layer-title">Transport Layer (TCP / UDP)</span>
+            <span class="layer-desc">Appends port information. Manages segmentation and flow reliability.</span>
+          </div>
+        </div>
+        <div class="layer-pill" style="border-left: 5px solid #98d8c8;">
+          <div class="layer-num" style="background: #98d8c8;">3</div>
+          <div class="layer-info">
+            <span class="layer-title">Network Layer (IPv4 / IPv6)</span>
+            <span class="layer-desc">Appends IP addresses. Handles routing packets across the internet.</span>
+          </div>
+        </div>
+        <div class="layer-pill" style="border-left: 5px solid #f7dc6f;">
+          <div class="layer-num" style="background: #f7dc6f; color: #1a1a1a;">2-1</div>
+          <div class="layer-info">
+            <span class="layer-title">Data Link & Physical Layers (Ethernet, Bit Stream)</span>
+            <span class="layer-desc">Appends hardware MAC frame. Transmits actual raw binary bits over line medium.</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 6: Error Detection -->
+    <!-- Slide 5: The Simulation Process -->
     <section>
-      <div class="section-label">Error Detection</div>
-      <h2>The Playground Algorithms</h2>
-      <br>
-      <div class="grid-2">
-        <div class="algo-card" style="border-color:#6366f1">
-          <div class="title" style="color:#818cf8">1D Parity (Even)</div>
-          <p>Counts total number of 1-bits. Appends a parity bit to make count even. Simple & fast but fails on even-number bit errors (false negatives).</p>
-          <br>
-          <p><strong>Example:</strong> 1101 → parity=1 → Send 11011</p>
+      <div class="section-label">Pipeline</div>
+      <h2>Sender to Receiver Flow</h2>
+      <div class="grid-2" style="margin-top: 20px;">
+        <div class="card">
+          <h3 style="color: var(--teal) !important; text-align: center !important;">📥 SENDING (Encapsulation)</h3>
+          <div style="display: flex; flex-direction: column; gap: 4px; align-items: center; margin-top: 10px;">
+            <div class="flow-step">1. Original Text Input</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">2. App Header Addition</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">3. Transport Port Mapping</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">4. Network Route Addressing</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">5. Hardware Framing (Ethernet)</div>
+          </div>
         </div>
-        <div class="algo-card" style="border-color:#14b8a6">
-          <div class="title" style="color:#5eead4">2D Parity (Block)</div>
-          <p>Computes parity for every row AND column. Can detect all 1, 2, and 3-bit errors. Much stronger than 1D parity.</p>
-          <br>
-          <p><strong>Use case:</strong> Early disk storage systems</p>
-        </div>
-        <div class="algo-card" style="border-color:#f97316">
-          <div class="title" style="color:#fb923c">Checksum (8-bit)</div>
-          <p>Divides data into 8-bit blocks and sums them. Takes the 1's complement as the checksum. Used in IP, TCP, and UDP headers.</p>
-          <br>
-          <p><strong>Use case:</strong> TCP/IP networking</p>
-        </div>
-        <div class="algo-card" style="border-color:#22c55e">
-          <div class="title" style="color:#4ade80">CRC-8 (Cyclic)</div>
-          <p>Performs polynomial (modulo-2) division of data using generator polynomial <code>100000111</code>. Extremely robust — detects burst errors.</p>
-          <br>
-          <p><strong>Use case:</strong> USB, Ethernet, file systems</p>
+        <div class="card">
+          <h3 style="color: var(--indigo) !important; text-align: center !important;">📤 RECEIVING (Decapsulation)</h3>
+          <div style="display: flex; flex-direction: column; gap: 4px; align-items: center; margin-top: 10px;">
+            <div class="flow-step">5. Retrieve Ethernet frame header</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">4. Verify IP destination address</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">3. Verify Transport TCP packet</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">2. Read Application header details</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">1. Display intact original message</div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 7: Relatable Context -->
+    <!-- Slide 6: Error Detection Math -->
     <section>
-      <div class="section-label">Why It Matters</div>
-      <h2>"How does my USB know my file got corrupted?"</h2>
-      <br>
-      <div class="card" style="text-align:center; padding: 30px">
-        <p style="font-size:0.7em; line-height:2">
-          When you save a file to a USB drive, the hardware computes <strong style="color:var(--teal)">check bits</strong> using CRC and stores them alongside the data.<br><br>
-          When you read the file back, it recomputes the check bits.<br><br>
-          If they <strong style="color:var(--green)">match ✅</strong> — file is intact.<br>
-          If they <strong style="color:var(--red)">don't match ❌</strong> — <em>"The file or directory is corrupted and unreadable."</em>
+      <div class="section-label">Algorithmic Playground</div>
+      <h2>Real-Time Detection Methods</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>🔢 Parity Check (1D & 2D)</h3>
+          <p style="font-size: 0.65em !important; line-height: 1.5;">
+            <strong>1-D Parity:</strong> Counts '1' bits to ensure parity value. Fast but misses even-number bit corruptions.
+            <br><br>
+            <strong>2-D Parity (Block):</strong> Places data in grid format, computing parity for both rows and columns. Easily detects multiple bit corruptions.
+          </p>
+        </div>
+        <div class="card">
+          <h3>⚡ Checksum & CRC-8</h3>
+          <p style="font-size: 0.65em !important; line-height: 1.5;">
+            <strong>Checksum:</strong> Computes 1's complement arithmetic sum over grouped binary blocks. Extensively utilized in TCP and IP headers.
+            <br><br>
+            <strong>CRC-8 (Cyclic Codes):</strong> Modulo-2 binary polynomial division (`100000111`). Strong burst-error protection used in hard drives, USBs, and Ethernet.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Everyday Context -->
+    <section>
+      <div class="section-label">Context</div>
+      <h2>How USB Drives Detect Failures</h2>
+      <div class="card" style="margin-top: 20px; padding: 30px; text-align: center;">
+        <p style="font-size: 0.75em !important; line-height: 1.8; text-align: center; color: #cbd5e1;">
+          "Cosmic rays, voltage shifts, or standard wear-and-tear can quietly flip data bits during writes."
+          <br><br>
+          Our application replicates this! When a file writes, the device calculates a **CRC checksum** and saves it. When read, the device re-calculates the CRC checksum. If they match, the file is perfectly fine. If they don't match, you get a file corruption error.
         </p>
       </div>
-      <br>
-      <div class="grid-3">
-        <div style="text-align:center; font-size:0.6em">
-          <div style="font-size:2em">💾</div>
-          <strong>USB Drives</strong><br><span style="color:#94a3b8">CRC-32</span>
-        </div>
-        <div style="text-align:center; font-size:0.6em">
-          <div style="font-size:2em">🌐</div>
-          <strong>Internet (TCP)</strong><br><span style="color:#94a3b8">Checksum</span>
-        </div>
-        <div style="text-align:center; font-size:0.6em">
-          <div style="font-size:2em">📡</div>
-          <strong>Wi-Fi (Ethernet)</strong><br><span style="color:#94a3b8">CRC-32</span>
-        </div>
+      <div class="grid-3" style="margin-top: 20px; text-align: center;">
+        <div class="card"><h3 style="text-align:center !important;">💾 USB Drives</h3><p style="text-align:center;">CRC-32 Protection</p></div>
+        <div class="card"><h3 style="text-align:center !important;">🌐 Wi-Fi / LAN</h3><p style="text-align:center;">Ethernet Frame Check</p></div>
+        <div class="card"><h3 style="text-align:center !important;">💿 Disk Systems</h3><p style="text-align:center;">ECC Parity Codes</p></div>
       </div>
     </section>
 
-    <!-- SLIDE 8: Tech Stack -->
-    <section>
-      <div class="section-label">Technology</div>
-      <h2>Tech Stack</h2>
-      <br>
-      <div class="tech-row">
-        <span class="tech-icon">⚛️</span>
-        <div><div class="tech-name">React 18</div><div class="tech-desc">Component-based UI with custom hooks for simulation state</div></div>
-      </div>
-      <div class="tech-row">
-        <span class="tech-icon">⚡</span>
-        <div><div class="tech-name">Vite</div><div class="tech-desc">Blazing-fast dev server and optimized production build</div></div>
-      </div>
-      <div class="tech-row">
-        <span class="tech-icon">🎨</span>
-        <div><div class="tech-name">Tailwind CSS</div><div class="tech-desc">Utility-first CSS with custom OSI layer color palette</div></div>
-      </div>
-      <div class="tech-row">
-        <span class="tech-icon">🎬</span>
-        <div><div class="tech-name">Framer Motion</div><div class="tech-desc">Smooth layer animations, transitions, and micro-interactions</div></div>
-      </div>
-      <div class="tech-row">
-        <span class="tech-icon">▲</span>
-        <div><div class="tech-name">Vercel</div><div class="tech-desc">Auto-deployment from GitHub — every push deploys instantly</div></div>
-      </div>
-    </section>
-
-    <!-- SLIDE 9: Architecture -->
+    <!-- Slide 8: Technical Architecture -->
     <section>
       <div class="section-label">Architecture</div>
-      <h2>Project Structure</h2>
-      <br>
+      <h2>Modular Application Design</h2>
       <div class="grid-2">
-        <div>
-          <p style="font-size:0.6em; color:var(--teal); font-weight:bold">📦 COMPONENTS</p>
-          <div class="card"><p><strong>LayerStack/</strong> — Visual OSI layers + animated active state</p></div>
-          <div class="card"><p><strong>ControlPanel/</strong> — Message input, protocol selector, playback controls</p></div>
-          <div class="card"><p><strong>InfoPanel/</strong> — Live header fields & layer descriptions</p></div>
-          <div class="card"><p><strong>ErrorPlayground/</strong> — DataInput, ErrorInjector, AlgorithmResults</p></div>
+        <div class="card">
+          <h3>📦 UI & Components</h3>
+          <ul style="font-size: 0.6em; color: #cbd5e1; padding-left: 20px;">
+            <li><strong>LayerStack:</strong> Renders active states dynamically with Framer Motion</li>
+            <li><strong>ControlPanel:</strong> Handles play states, packet speed, and custom data input</li>
+            <li><strong>InfoPanel:</strong> Highlighting protocol header values</li>
+            <li><strong>ErrorPlayground:</strong> Renders visual interactive binary nodes</li>
+          </ul>
         </div>
-        <div>
-          <p style="font-size:0.6em; color:var(--coral); font-weight:bold">🔧 UTILITIES & HOOKS</p>
-          <div class="card"><p><strong>useSimulation.js</strong> — State machine: step, direction, auto-play timer</p></div>
-          <div class="card"><p><strong>encapsulation.js</strong> — DataPacket class: builds all 7 layer packets</p></div>
-          <div class="card"><p><strong>protocolHeaders.js</strong> — Generates realistic headers per layer</p></div>
-          <div class="card"><p><strong>errorDetection.js</strong> — Parity, Checksum, CRC algorithms</p></div>
+        <div class="card">
+          <h3>⚙️ Application Utilities</h3>
+          <ul style="font-size: 0.6em; color: #cbd5e1; padding-left: 20px;">
+            <li><strong>useSimulation.js:</strong> Centralized React hook controlling sequential flow</li>
+            <li><strong>encapsulation.js:</strong> State transitions generator building OSI frames</li>
+            <li><strong>protocolHeaders.js:</strong> Generating realistic mock header metadata</li>
+            <li><strong>errorDetection.js:</strong> Real mathematical logic calculations</li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 10: Live Links -->
-    <section class="title-slide">
+    <!-- Slide 9: Tech Stack Summary -->
+    <section>
+      <div class="section-label">Technology</div>
+      <h2>Technologies Powering the App</h2>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <div class="tech-logo">⚛️</div>
+          <div class="tech-title">React 18</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-logo">⚡</div>
+          <div class="tech-title">Vite</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-logo">🎨</div>
+          <div class="tech-title">Tailwind</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-logo">🎬</div>
+          <div class="tech-title">Framer Motion</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-logo">▲</div>
+          <div class="tech-title">Vercel</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10: Presentation Wrapup -->
+    <section style="text-align: center;">
+      <div style="font-size: 3em; margin-bottom: 20px;">🚀</div>
+      <h2>Interactive Demo Ready!</h2>
       <br>
-      <div style="font-size:2.5em">🚀</div>
-      <h2>Try It Live!</h2>
-      <br>
-      <div class="url-box" style="font-size:0.8em; padding:20px">
-        🌐 &nbsp;<strong>Live App</strong><br>
-        <a href="https://network-protocol-visualizer.vercel.app" style="font-size:1.2em">
-          network-protocol-visualizer.vercel.app
-        </a>
+      <div class="url-box" style="margin-top: 10px;">
+        <strong>🔗 Launch Live Application</strong><br>
+        <a href="https://network-protocol-visualizer.vercel.app" target="_blank">network-protocol-visualizer.vercel.app</a>
+      </div>
+      <div class="url-box" style="margin-top: 10px;">
+        <strong>🔗 View Project Repository</strong><br>
+        <a href="https://github.com/chiiinmay/network-protocol-visualizer" target="_blank">github.com/chiiinmay/network-protocol-visualizer</a>
       </div>
       <br>
-      <div class="url-box" style="font-size:0.8em; padding:20px">
-        💻 &nbsp;<strong>Source Code (GitHub)</strong><br>
-        <a href="https://github.com/chiiinmay/network-protocol-visualizer" style="font-size:1.2em">
-          github.com/chiiinmay/network-protocol-visualizer
-        </a>
-      </div>
-      <br>
-      <div style="font-size:0.55em; color:#64748b; text-align:center">Built for Computer Networks Course 🎓</div>
+      <p style="font-size: 0.6em !important; text-align: center; color: #64748b;">
+        Created for Computer Networks Course Presentation 🎓
+      </p>
     </section>
 
   </div>
@@ -409,13 +497,17 @@
 <script>
   Reveal.initialize({
     hash: true,
-    transition: 'slide',
+    transition: 'fade',
     backgroundTransition: 'fade',
     controls: true,
     progress: true,
     slideNumber: true,
-    autoSlide: 0,
-    loop: false
+    center: true, // Auto vertical centering to prevent overlap
+    width: 1000,
+    height: 700,
+    margin: 0.08,
+    minScale: 0.2,
+    maxScale: 1.5
   });
 </script>
 </body>
